@@ -1,10 +1,10 @@
-package de.malksbier.webpage;
+package de.springwegarche.MyCuteManager;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class WebpageApplicationTests {
+class MyCuteManagerApplicationTests {
 
 	@Test
 	void contextLoads() {
