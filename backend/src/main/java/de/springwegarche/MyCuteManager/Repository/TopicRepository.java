@@ -3,6 +3,7 @@ package de.springwegarche.MyCuteManager.Repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import de.springwegarche.MyCuteManager.Models.Topic;
 import jakarta.transaction.Transactional;
@@ -12,6 +13,11 @@ import java.util.Optional;
 
 
 public interface TopicRepository extends JpaRepository<Topic, Long>{
+
+    //@Query("select t from topics u where t.name = :#{#topic.name} AND t.parent_id = :#{#topic.parentId}")
+    Optional<Topic> findByNameAndParentId(String name, long parentId);
+
+
     /*
     Optional<Topic> findById(long id);
 

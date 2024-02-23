@@ -3,6 +3,7 @@ package de.springwegarche.MyCuteManager.Models;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -10,6 +11,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +20,7 @@ import java.util.Objects;
 import io.micrometer.common.lang.Nullable;
 
 @Entity
-@Table(name = "TOPICS")
+@Table(name = "TOPICS", uniqueConstraints = { @UniqueConstraint( columnNames = { "name", "parent_id" } ) })
 public class Topic {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,42 +33,25 @@ public class Topic {
     @Column(name = "info")
     private String info;
 
-    @Nullable
-    @ManyToOne
-    @JoinColumn(name = "parent_id")
-    private Topic parent;
+    @Column(name = "parent_id", columnDefinition = "long default 0")
+    private long parentId;
 
-    @Column(name = "children")
-    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Topic> children = new ArrayList<>();
-
-
-
-    public Topic(String name, String givenName, Topic parent) {
+    public Topic(String name) {
         this.name = name;
-        this.givenName = givenName;
-        this.parent = parent;
     }
 
-    public static Topic createTopicForNormalizing(String name, Topic parent, String info) {
-        Topic t = new Topic();
-        t.setName(name);
-        t.setParent(parent);
-        t.setInfo(info);
-        return t;
-    }
     // GENERATED
+
 
     public Topic() {
     }
 
-    public Topic(long id, String name, String givenName, String info, Topic parent, List<Topic> children) {
+    public Topic(long id, String name, String givenName, String info, long parentId) {
         this.id = id;
         this.name = name;
         this.givenName = givenName;
         this.info = info;
-        this.parent = parent;
-        this.children = children;
+        this.parentId = parentId;
     }
 
     public long getId() {
@@ -101,20 +86,12 @@ public class Topic {
         this.info = info;
     }
 
-    public Topic getParent() {
-        return this.parent;
+    public long getParentId() {
+        return this.parentId;
     }
 
-    public void setParent(Topic parent) {
-        this.parent = parent;
-    }
-
-    public List<Topic> getChildren() {
-        return this.children;
-    }
-
-    public void setChildren(List<Topic> children) {
-        this.children = children;
+    public void setParentId(long parentId) {
+        this.parentId = parentId;
     }
 
     public Topic id(long id) {
@@ -137,13 +114,8 @@ public class Topic {
         return this;
     }
 
-    public Topic parent(Topic parent) {
-        setParent(parent);
-        return this;
-    }
-
-    public Topic children(List<Topic> children) {
-        setChildren(children);
+    public Topic parentId(long parentId) {
+        setParentId(parentId);
         return this;
     }
 
@@ -155,12 +127,12 @@ public class Topic {
             return false;
         }
         Topic topic = (Topic) o;
-        return id == topic.id && Objects.equals(name, topic.name) && Objects.equals(givenName, topic.givenName) && Objects.equals(info, topic.info) && Objects.equals(parent, topic.parent) && Objects.equals(children, topic.children);
+        return id == topic.id && Objects.equals(name, topic.name) && Objects.equals(givenName, topic.givenName) && Objects.equals(info, topic.info) && parentId == topic.parentId;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, givenName, info, parent, children);
+        return Objects.hash(id, name, givenName, info, parentId);
     }
 
     @Override
@@ -170,10 +142,10 @@ public class Topic {
             ", name='" + getName() + "'" +
             ", givenName='" + getGivenName() + "'" +
             ", info='" + getInfo() + "'" +
-            ", parent='" + getParent() + "'" +
-            ", children='" + getChildren() + "'" +
+            ", parentId='" + getParentId() + "'" +
             "}";
     }
+    
 
 
 }

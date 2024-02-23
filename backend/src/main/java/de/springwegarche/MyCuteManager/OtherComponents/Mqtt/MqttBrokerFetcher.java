@@ -34,6 +34,7 @@ public class MqttBrokerFetcher extends Thread implements IMqttBrokerFetcher{
 
     
     public MqttBrokerFetcher() {
+        super(TAG);
         System.out.println(TAG + "started");
 
         collectedSimpleTopics = new ArrayList<>();
@@ -78,13 +79,8 @@ public class MqttBrokerFetcher extends Thread implements IMqttBrokerFetcher{
         }
 
         System.out.println(TAG + "found " + collectedSimpleTopics.size() + " Topics");
-        ArrayList<Topic> normalizedTopics = MqttTopicEntangler.entangleTopics(collectedSimpleTopics);
-
-        for(int i = 0;i<normalizedTopics.size();i++) {
-            topicService.addTopic(normalizedTopics.get(i));
-        }
-
-        
+        //ArrayList<SimpleTopic> cleanedTopics = MqttTopicEntangler.cleanUpTopics(collectedSimpleTopics);
+        MqttTopicEntangler.cleanAndWriteToDb(topicService, collectedSimpleTopics);
 
     }
 

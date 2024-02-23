@@ -4,13 +4,16 @@ import java.util.ArrayList;
 
 import de.springwegarche.MyCuteManager.Models.SimpleTopic;
 import de.springwegarche.MyCuteManager.Models.Topic;
+import de.springwegarche.MyCuteManager.Service.TopicService;
 
 public class MqttTopicEntangler {
     private static String TAG = "[MqttTopicEntangler] ";
 
     private static String infoFlag = "/info";
+    private static String infoForDirectories = "dir";
 
-    public static ArrayList<Topic> entangleTopics(ArrayList<SimpleTopic> longTopics) {
+    // removes all non info Topics and removes the "info" Topic
+    public static ArrayList<SimpleTopic> cleanUpTopics(ArrayList<SimpleTopic> longTopics) {
         // remove all non info Topics;
         for(int i = 0;i<longTopics.size();i++) {
             if(! longTopics.get(i).getTopic().endsWith(infoFlag))  {
@@ -18,28 +21,89 @@ public class MqttTopicEntangler {
                 i--;
             }
         }
-        System.out.println(TAG + "found " + longTopics.size() + "valid Topics");
-        
-        for(int i = 0;i<longTopics.size();i++) {
+        System.out.println(TAG + "found " + longTopics.size() + " valid Topics");
 
+        // remove "/info"
+        for(int i = 0;i<longTopics.size();i++) {
+            SimpleTopic st = longTopics.get(i);
+            st.setTopic(st.getTopic().substring(0, st.getTopic().length() - infoFlag.length()));
+            longTopics.set(i, st);
+        }
+
+        /* 
+        for(int i = 0;i<longTopics.size();i++) {
+            // splitting SimpleTopics to unique ones
+            SimpleTopic st = longTopics.get(i);
+            
+            System.out.println(st.getTopic());
+
+            String[] singleTopics = st.getTopic().split("/");
+            for(int k=0;k< singleTopics.length; k++){
+                String topicName = singleTopics[k];
+                System.out.print(topicName);
+
+                Topic newTopic;
+
+                if(!result.contains(newTopic)) {
+                    result.add(newTopic);
+                }
+            }
+            
         }
 
         Topic main = Topic.createTopicForNormalizing("malksbier", null, null);
         Topic sub1 = Topic.createTopicForNormalizing("hof", main , "An/aus");
         Topic sub2 = Topic.createTopicForNormalizing("haus", main , "An/aus");
 
-        /* 
+        
         Topic main = new Topic("malksbier", "", null);
         main.getChildren().add(new Topic("Haus", "", main));
         main.getChildren().add(new Topic("Hof", "", main));
-        */
         
-        ArrayList<Topic> result = new ArrayList<Topic>();
+        
+        //ArrayList<Topic> result = new ArrayList<Topic>();
         
 
         result.add(main);
         result.add(sub1);
         result.add(sub2);
-        return result;
+        */
+        return longTopics;
+    }
+
+    public static void cleanAndWriteToDb(TopicService topicService, ArrayList<SimpleTopic> topicsFromBroker) {
+        ArrayList<SimpleTopic> cleanedUpTopics = cleanUpTopics(topicsFromBroker);
+
+        ArrayList<Topic> loadedTopics = new ArrayList<Topic>(topicService.findAll());
+        ArrayList<Topic> existingTopics = new ArrayList<Topic>(topicService.findAll());
+
+
+        for(int cleandCounter = 0; cleandCounter < cleanedUpTopics.size(); cleandCounter++) {
+            SimpleTopic st = cleanedUpTopics.get(cleandCounter);
+            //System.out.println(st.toString());
+            String[] singleTopics = st.getTopic().split("/");
+
+            Topic parent;
+            long lastParent = 0;
+            for(int singleTopicCounter = 0; singleTopicCounter < singleTopics.length; singleTopicCounter++) {
+                
+                Topic t = new Topic(singleTopics[singleTopicCounter]);
+                t.setParentId(lastParent);
+
+                // INFO 
+                if(singleTopicCounter == singleTopics.length - 1) {
+                    t.setInfo(st.getMessage());
+                } else {
+                    t.setInfo(infoForDirectories);
+                }
+                
+                parent = topicService.addIfNotExistOrReturnTopicByNameAndParentId(t);
+                if(parent != null) {
+                    lastParent = parent.getId();
+                } else {
+                    lastParent = -1;
+                }
+            }
+        }
     }
 }

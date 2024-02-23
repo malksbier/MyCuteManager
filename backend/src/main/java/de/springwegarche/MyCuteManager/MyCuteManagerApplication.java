@@ -14,7 +14,7 @@ import de.springwegarche.MyCuteManager.Service.TopicService;
 public class MyCuteManagerApplication {
 	private static String TAG = "[MyCuteManagerApplication] ";
 
-	MqttManager mqttManager;
+	MqttManager mqttManager; 
 
 	public static void main(String[] args) {
 		ConfigurableApplicationContext context = SpringApplication.run(MyCuteManagerApplication.class, args);
