@@ -30,11 +30,12 @@ public class TopicService {
             System.out.println(TAG + "Topic: " + t.getName() + " with ParentId: " + t.getParentId() + " saved");
             return saved;
         }
-
-        
     }
 
     public List<Topic> findAll() {
         return topicRepository.findAll();
+    }
+    public Topic findById(long id) {
+        return topicRepository.getReferenceById(id);
     }
 }

@@ -1,9 +1,11 @@
 package de.springwegarche.MyCuteManager.Helper;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import de.springwegarche.MyCuteManager.Models.SimpleTopic;
 import de.springwegarche.MyCuteManager.Models.Topic;
+import de.springwegarche.MyCuteManager.Models.DAO.WebTopic;
 import de.springwegarche.MyCuteManager.Service.TopicService;
 
 public class MqttTopicEntangler {
@@ -11,6 +13,47 @@ public class MqttTopicEntangler {
 
     private static String infoFlag = "/info";
     private static String infoForDirectories = "dir";
+
+    // create WebTopics
+    public static ArrayList<WebTopic> morphToWebTopics(List<Topic> topics) {
+        ArrayList<WebTopic> result = new ArrayList<>();
+
+        // convert to WebTopics
+        for (int i=0; i<topics.size(); i++) {
+            result.add(WebTopic.fromTopic(topics.get(i)));
+        }
+        for (int i=0; i<result.size(); i++) {
+            WebTopic t = result.get(i);
+
+            //System.out.println(TAG+ "looking for parent for: " + t.getName());
+            if(t.getParentId() != 0) {
+                for (int k = 0; k < result.size(); k++) {
+                    if(k!=i) {
+                        WebTopic possibleParent = result.get(k);
+
+                        if(t.getParentId() == possibleParent.getId()) {
+                            possibleParent.addChild(t);
+                        }
+                    }
+                }
+            } 
+        }
+
+
+        // remove all non Root Topics
+        for (int i=0; i<result.size(); i++) {
+            WebTopic t = result.get(i);
+            if(t.getParentId() != 0) {
+                result.remove(i);
+                i--;
+
+                //System.out.println(TAG + t.getName() +  " " +  t.getParentId());
+            }
+        }
+
+
+        return result;
+    }
 
     // removes all non info Topics and removes the "info" Topic
     public static ArrayList<SimpleTopic> cleanUpTopics(ArrayList<SimpleTopic> longTopics) {

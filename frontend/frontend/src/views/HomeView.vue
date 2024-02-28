@@ -2,9 +2,7 @@
 
 <template>
   <div>
-    
-
-      HOME
+  
       <TopicList/>
  
   </div>
