@@ -19,7 +19,7 @@ import de.springwegarche.MyCuteManager.Models.DAO.WebTopic;
 import de.springwegarche.MyCuteManager.OtherComponents.Mqtt.MqttStateUpdater;
 import de.springwegarche.MyCuteManager.Service.TopicService;
 
-@CrossOrigin(origins = "http://localhost:8080")
+@CrossOrigin(origins = "*")
 @RestController
 public class MqttController {
     @Autowired
