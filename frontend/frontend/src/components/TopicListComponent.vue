@@ -1,6 +1,6 @@
 <template>
     <div id="TopicListComponent">
-        <h5>TOPICS</h5>
+        
         <div v-if="!loaded">
             <p>lädt</p>
         </div>

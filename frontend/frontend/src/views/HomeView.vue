@@ -2,19 +2,15 @@
 
 <template>
   <div>
-  
-      <TopicList/>
+    <h6>MyCute Manager</h6>
  
   </div>
 </template>
 
 <script>
-
-  import TopicList from '../components/TopicListComponent.vue'
-
   export default {
       components: {
-        TopicList
+        
       }
   }
 </script>

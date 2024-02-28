@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import de.springwegarche.MyCuteManager.Helper.MqttTopicEntangler;
+import de.springwegarche.MyCuteManager.Models.DAO.TopicNewName;
 import de.springwegarche.MyCuteManager.Models.DAO.TopicState;
 import de.springwegarche.MyCuteManager.Models.DAO.WebTopic;
 import de.springwegarche.MyCuteManager.OtherComponents.Mqtt.MqttStateUpdater;
@@ -20,6 +21,8 @@ import de.springwegarche.MyCuteManager.Service.TopicService;
 @CrossOrigin(origins = "*")
 @RestController
 public class MqttController {
+    private static String TAG = "[MqttController] ";
+
     @Autowired
     private TopicService topicService;
     @Autowired
@@ -35,6 +38,18 @@ public class MqttController {
         
         mqttStateUpdater.update(state);
 
+        return new ResponseEntity<>(
+            "test", 
+            HttpStatus.OK);
+    }
+    @PostMapping({"/mqtt/setGivenName"})
+    public ResponseEntity<String> setTopicState(@RequestBody TopicNewName newName) {
+
+
+        topicService.updateGivenName(newName.getId(), newName.getNewName());
+
+        System.out.println(TAG + "set givenName: " + newName.getId() + " -> " + newName.getNewName());
+        
         return new ResponseEntity<>(
             "test", 
             HttpStatus.OK);

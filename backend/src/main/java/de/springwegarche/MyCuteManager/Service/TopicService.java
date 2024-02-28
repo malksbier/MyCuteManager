@@ -42,4 +42,9 @@ public class TopicService {
     public Topic findById(long id) {
         return topicRepository.getReferenceById(id);
     }
+    public Topic updateGivenName(long id, String newName) {
+        topicRepository.updateGivenName(id, newName);
+
+        return findById(id);
+    }
 }

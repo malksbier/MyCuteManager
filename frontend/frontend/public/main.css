@@ -4,3 +4,16 @@
 .topicListItem {
     margin-left: 2vw;
 }
+.p-topic-name {
+    min-width: 15vw;
+}
+.input-topic-name-width {
+    max-width: 25vw;
+}
+
+@media only screen and (max-width: 600px) {
+    .input-topic-name-width {
+        max-width: 35vw;
+    }
+}
+

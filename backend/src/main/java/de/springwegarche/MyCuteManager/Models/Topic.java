@@ -20,9 +20,9 @@ public class Topic {
     @Column(name = "name")
     private String name;
     @Column(name = "given_name")
-    private String givenName;
+    private String givenName = "";
     @Column(name = "info")
-    private String info;
+    private String info = "";
 
     @Column(name = "parent_id", columnDefinition = "long default 0")
     private long parentId;

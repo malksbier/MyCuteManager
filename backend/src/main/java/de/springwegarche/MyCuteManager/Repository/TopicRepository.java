@@ -17,6 +17,11 @@ public interface TopicRepository extends JpaRepository<Topic, Long>{
     //@Query("select t from topics u where t.name = :#{#topic.name} AND t.parent_id = :#{#topic.parentId}")
     Optional<Topic> findByNameAndParentId(String name, long parentId);
 
+    @Modifying
+    @Transactional
+    @Query("UPDATE Topic t SET t.givenName = :newName WHERE  t.id = :id")
+    int updateGivenName(long id, String newName);
+
 
     /*
     Optional<Topic> findById(long id);
