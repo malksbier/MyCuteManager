@@ -18,7 +18,11 @@ public class TopicService {
     private TopicRepository topicRepository;
 
     public Topic addTopic(Topic t) {
-        return topicRepository.save(t);
+        if(t != null) {
+            return topicRepository.save(t);
+        } else {
+            return new Topic();
+        }
     }
     public Topic addIfNotExistOrReturnTopicByNameAndParentId(Topic t) {
         Optional<Topic> topic = topicRepository.findByNameAndParentId(t.getName(),t.getParentId());

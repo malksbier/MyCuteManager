@@ -3,14 +3,11 @@ package de.springwegarche.MyCuteManager.OtherComponents.Mqtt;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
-import org.eclipse.paho.client.mqttv3.MqttSecurityException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 import de.springwegarche.MyCuteManager.Interfaces.Mqtt.IMqttManager;
-import de.springwegarche.MyCuteManager.Models.Topic;
 import de.springwegarche.MyCuteManager.Service.TopicService;
 /* 
 ROOT for all MQTT things

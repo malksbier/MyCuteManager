@@ -1,14 +1,11 @@
 package de.springwegarche.MyCuteManager;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 
 import de.springwegarche.MyCuteManager.Helper.ConsolePicturePrinter;
-import de.springwegarche.MyCuteManager.Models.Topic;
 import de.springwegarche.MyCuteManager.OtherComponents.Mqtt.MqttManager;
-import de.springwegarche.MyCuteManager.Service.TopicService;
 
 @SpringBootApplication
 public class MyCuteManagerApplication {

@@ -117,10 +117,6 @@ public class MqttTopicEntangler {
     public static void cleanAndWriteToDb(TopicService topicService, ArrayList<SimpleTopic> topicsFromBroker) {
         ArrayList<SimpleTopic> cleanedUpTopics = cleanUpTopics(topicsFromBroker);
 
-        ArrayList<Topic> loadedTopics = new ArrayList<Topic>(topicService.findAll());
-        ArrayList<Topic> existingTopics = new ArrayList<Topic>(topicService.findAll());
-
-
         for(int cleandCounter = 0; cleandCounter < cleanedUpTopics.size(); cleandCounter++) {
             SimpleTopic st = cleanedUpTopics.get(cleandCounter);
             //System.out.println(st.toString());

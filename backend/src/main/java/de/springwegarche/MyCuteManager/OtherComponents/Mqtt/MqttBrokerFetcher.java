@@ -15,7 +15,6 @@ import org.springframework.stereotype.Component;
 import de.springwegarche.MyCuteManager.Helper.MqttTopicEntangler;
 import de.springwegarche.MyCuteManager.Interfaces.Mqtt.IMqttBrokerFetcher;
 import de.springwegarche.MyCuteManager.Models.SimpleTopic;
-import de.springwegarche.MyCuteManager.Models.Topic;
 import de.springwegarche.MyCuteManager.Service.TopicService;
 
 @Component
