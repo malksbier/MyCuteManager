@@ -1,7 +1,6 @@
 #router-container {
-    margin: 0px 20px 0px 20px; 
+    margin: 0px 2vw 0px 2vw; 
 }
-
-p {
-    margin-bottom: 0.3rem;
+.topicListItem {
+    margin-left: 2vw;
 }
