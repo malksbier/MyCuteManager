@@ -31,7 +31,7 @@ export default {
     },
     mounted() {
         this.axios
-            .get('http://192.168.2.108:8081/mqtt/getAllTopics')
+            .get('http://192.168.2.108:8081/mqtt/getAllTopicsMorphed')
             .then(response => (this.topics = response.data))
             .catch(
                 err => {

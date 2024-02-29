@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import de.springwegarche.MyCuteManager.Helper.MqttTopicEntangler;
+import de.springwegarche.MyCuteManager.Models.Topic;
 import de.springwegarche.MyCuteManager.Models.DAO.TopicNewName;
 import de.springwegarche.MyCuteManager.Models.DAO.TopicState;
 import de.springwegarche.MyCuteManager.Models.DAO.WebTopic;
@@ -20,7 +21,7 @@ import de.springwegarche.MyCuteManager.Service.TopicService;
 
 @CrossOrigin(origins = "*")
 @RestController
-public class MqttController {
+public class MqttTopicController {
     private static String TAG = "[MqttController] ";
 
     @Autowired
@@ -28,9 +29,13 @@ public class MqttController {
     @Autowired
     private MqttStateUpdater mqttStateUpdater;
 
-    @GetMapping({"/mqtt/getAllTopics"})
-    public List<WebTopic> getAllTopics() {
+    @GetMapping({"/mqtt/getAllTopicsMorphed"})
+    public List<WebTopic> getAllTopicsMorphed() {
         return MqttTopicEntangler.morphToWebTopics(topicService.findAll());
+    }
+    @GetMapping({"/mqtt/getAllTopics"})
+    public List<Topic> getAllTopics() {
+        return topicService.findAll();
     }
 
     @PostMapping({"/mqtt/setTopicState"})
