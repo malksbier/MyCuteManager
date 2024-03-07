@@ -2,8 +2,64 @@
     <div class="rules-add">
         <div class="card">
             <div class="card-body">
-                <h5 class="card-title">Add Rule</h5>
+                <h5 class="card-title">Change Rules</h5>
                 <form>
+                    <!-- TOPIC SELECT -->
+                    <div class="row">
+                        <div class="col">
+                            <label for="topicSelect">Topic</label>
+                            <select class="form-control" id="topicSelect" v-model="template.topicId">
+                                <option v-for="topic in this.topics" :key="topic.id"  :value="topic.id"> {{ resolveTopicName(topic) }}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <!-- RULES -->
+                    <div v-if="template.topicId != ''" class="mt-1">
+                        <!-- TIMER -->
+                        <div class="card">
+                            <div class="card-body">
+                                <!-- Head -->
+                                <div class="row">
+                                    <div class="col-auto">
+                                        <h6 class="card-title" style="margin: 0px; padding-top: 8px; ">Timer</h6>
+                                    </div>
+                                    <div class="col-2">
+                                        <button type="button" class="btn" @click="template.showTimerCard = !template.showTimerCard">
+                                            <i v-if="!template.showTimerCard" class="fa-solid fa-caret-up"></i>
+                                            <i v-if="template.showTimerCard" class="fa-solid fa-caret-down"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <!-- Existing -->
+                                <label for="time-rules">existing rules:</label>
+                                <div id="time-rules" v-for="r in rules" :key="r.id">
+                                    <p>
+                                        {{ r.name }}
+                                    </p>
+                                </div> 
+                                
+                                <!-- ADD -->
+                                <div v-if="template.timer.showCard">
+                                    <label for="time-input-group">new Time schedule</label>
+                                    <div id="time-input-group" class="input-group">
+                                        <span class="input-group-text">ON</span>
+                                        <span class="input-group-text">From</span>
+                                        <input type="time" class="form-control" value="10:00" v-model="template.timer.from"/>
+                                        <span class="input-group-text">Until</span>
+                                        <input type="time" class="form-control" value="20:00" v-model="template.timer.until"/>
+                                        <button @click="sendNewRule()" class="btn btn-outline-success" type="button">send</button>
+                                    </div>
+                                    <div>
+
+                                    </div>
+                                    
+                                </div>
+                            
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!--
                     <div class="row">
                         <div class="col-md-6">
                             <label for="inputName">Name</label>
@@ -12,7 +68,7 @@
                         <div class="col-md-6">
                             <label for="selectRule">Type</label>
                             <select class="form-control" id="selectRule" v-model="template.typeOfNewRule">
-                                <option value="timer">timer</option>
+                                <option value="timer">Timer</option>
                                 <option value="other">other</option>
                                 <option value="other">other</option>
                             </select>
@@ -22,12 +78,13 @@
                         <div class="col-xs-4">
                             <label for="topicSelect">Topic</label>
                             <select class="form-control" id="topicSelect" v-model="template.topicId">
-                                <option v-for="topic in this.topics" :key="topic.id"  :value="topic.id"> {{ topic.name }}</option>
+                                <option v-for="topic in this.topics" :key="topic.id"  :value="topic.id"> {{ resolveTopicName(topic) }}</option>
                             </select>
                         </div>
                         <div class="col-xs-8">
                             <label for="topicSelect">Time</label>
                             <div class="input-group">
+                                <span class="input-group-text">ON</span>
                                 <span class="input-group-text">From</span>
                                 <input type="time" class="form-control" value="10:00" />
                                 <span class="input-group-text">Until</span>
@@ -37,8 +94,9 @@
                     </div>
                     
                     <div class="row">
-                        <button style="width:40%;" class="btn btn-success btn-block mt-3 mx-auto"> Send </button>
+                        <button @click="sendNewRule()" style="width:40%;" class="btn btn-success btn-block mt-3 mx-auto"> Send </button>
                     </div>
+                    -->
                 </form>
             </div>
         </div>
@@ -81,25 +139,41 @@
   export default {
     name: "RulesAddComponent",
     props: [
-        'topics'
+        'topics',
+        'rules'
     ],
     methods: {
-        onPressed() {
+        resolveTopicName(topic) {
+            if(topic.givenName == "") {
+                return topic.name
+            } else {
+                return topic.givenName + " - " + topic.name
+            }
+        },
+        sendNewRule() {
+            this.reply.newRule.name = "not given",
+            this.reply.newRule.rule = "TIMER {" + this.template.topicId + "} " + this.template.timer.from + " - " + this.template.timer.until,
+            console.log(this.reply.newRule)
 
+            this.axios.post(this.apiAdress + "/mqtt/writeNewRule", this.reply.newRule)
         },
     },
     data() {
       return {
         apiAdress: "http://192.168.2.108:8081",
-        onOffReply: {
-            id: 1,
-            state: null,
-        },
-        newNameReply: {
-            id: 1,
-            newName: "",
+        reply: {
+            newRule:{
+                name: "",
+                rule: "",
+            },
         },
         template: {
+            timer: {
+                showCard: true,
+                from: "10:00",
+                until: "20:00",
+            },
+            
             typeOfNewRule: "",
             newName: "",
             topicId: "",

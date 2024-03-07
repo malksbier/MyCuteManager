@@ -1,7 +1,7 @@
 <template>
     <div>
         <h5>Rules</h5>
-        <RulesAdd v-bind:topics="topics"/>
+        <RulesAdd :topics="topics" :rules="rules" />
     </div>
   </template>
   
