@@ -29,4 +29,8 @@ public class RuleService {
     public List<Rule> findAll() {
         return ruleRepository.findAll();
     }
+
+    public void deleteById(long ruleId) {
+        ruleRepository.deleteById(ruleId);
+    }
 }

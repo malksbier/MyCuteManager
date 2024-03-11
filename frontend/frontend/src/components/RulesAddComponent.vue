@@ -32,11 +32,18 @@
                                 </div>
                                 <!-- Existing -->
                                 <label for="time-rules">existing rules:</label>
-                                <div id="time-rules" v-for="r in rules" :key="r.id">
-                                    <p>
-                                        {{ r.name }}
-                                    </p>
-                                </div> 
+
+                                    <div id="time-rules" v-for="r in this.rules" :key="r.id">
+                                        <div class="input-group" v-if="r.parents.includes(template.topicId) && r.rule.startsWith('TIMER')">
+                                            <span class="input-group-text">{{ resolveRuleDescription(r) }}</span>
+                                            <button class="btn btn-outline-danger" type="button" @click="deleteRule(r.id)"> 
+                                                <i style="padding-right: .5vw;" class="fa-solid fa-delete-left"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                          
+
+                                
                                 
                                 <!-- ADD -->
                                 <div v-if="template.timer.showCard">
@@ -143,6 +150,10 @@
         'rules'
     ],
     methods: {
+        deleteRule(id) {
+            this.reply.deleteRequest.id = id,
+            this.axios.post(this.apiAdress + "/mqtt/deleteRule", this.reply.deleteRequest)
+        },
         resolveTopicName(topic) {
             if(topic.givenName == "") {
                 return topic.name
@@ -150,12 +161,17 @@
                 return topic.givenName + " - " + topic.name
             }
         },
+        resolveRuleDescription(rule) {
+            return rule.name + ": " + rule.rule;
+        },
         sendNewRule() {
             this.reply.newRule.name = "not given",
             this.reply.newRule.rule = "TIMER {" + this.template.topicId + "} " + this.template.timer.from + " - " + this.template.timer.until,
             console.log(this.reply.newRule)
 
-            this.axios.post(this.apiAdress + "/mqtt/writeNewRule", this.reply.newRule)
+            this.axios.post(this.apiAdress + "/mqtt/writeNewRule", this.reply.newRule)/*.then(response => (
+                this.rules.push(response.data))
+                ),*/
         },
     },
     data() {
@@ -166,6 +182,9 @@
                 name: "",
                 rule: "",
             },
+            deleteRequest: {
+                id: "",
+            }
         },
         template: {
             timer: {

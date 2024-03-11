@@ -33,7 +33,7 @@
         // get rules
         this.axios
           .get('http://192.168.2.108:8081/mqtt/getAllRules')
-          .then(response => (this.topics = response.data))
+          .then(response => (this.rules = response.data))
           .catch(
             err => {
               console.log(err)
